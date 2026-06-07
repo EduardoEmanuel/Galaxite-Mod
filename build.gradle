@@ -15,16 +15,25 @@ repositories {
 }
 
 loom {
-	splitEnvironmentSourceSets()
+    splitEnvironmentSourceSets() 
 
-	mods {
-		"galaxite" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
+    // Força o plugin a não gerar perfis corrompidos para IDEs antigas
+    // (O VS Code vai ler direto do Gradle de forma limpa)
+    runs {
+        configureEach {
+            ideConfigGenerated = false
+        }
+    }
 
+    mods {
+        "galaxite" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
 }
+
+
 
 fabricApi {
 	configureDataGeneration {
