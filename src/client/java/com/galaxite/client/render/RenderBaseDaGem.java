@@ -2,20 +2,27 @@ package com.galaxite.client.render;
 
 import org.jspecify.annotations.NonNull;
 
+import com.galaxite.client.render.camadas.CamadaDeCabelo;
+import com.galaxite.client.render.camadas.CamadaDeOlho;
+import com.galaxite.client.render.camadas.CamadaDePedra;
+import com.galaxite.client.render.camadas.CamadaDePele;
+import com.galaxite.client.render.camadas.CamadaDeRoupa;
+
 import com.galaxite.entidades.BaseDasGems;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.Identifier;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 public abstract class RenderBaseDaGem<T extends BaseDasGems, M extends EntityModel<EstadoDoRenderDaGem>> extends MobRenderer<T, EstadoDoRenderDaGem, M> {
 
     public RenderBaseDaGem(EntityRendererProvider.Context context, M model, float shadowRadius) {
         super(context, model, shadowRadius);
-        this.addLayer(new GemClothingLayer<>(this));
+        this.addLayer(new CamadaDeCabelo<>(this));
+        this.addLayer(new CamadaDeRoupa<>(this));
+        this.addLayer(new CamadaDePele<>(this));
+        this.addLayer(new CamadaDeOlho<>(this));
+        this.addLayer(new CamadaDePedra<>(this));
     }
 
     @Override
@@ -30,9 +37,28 @@ public abstract class RenderBaseDaGem<T extends BaseDasGems, M extends EntityMod
         // Seus registros dinâmicos existentes...
         state.gemPlacement = entity.getGemPlacement();
         state.clothingName = entity.getClothingName();
+        state.hairstyleName = entity.getHairstyleName();
+        state.eyeVariantName = entity.getEyeVariant();
+        state.skinName = entity.getSkinName();
         state.paletteName = entity.getPaletteName();
         state.clothingTextureFolder = entity.getClothingTextureFolder();
+        state.hairstyleTextureFolder = entity.getHairstyleTextureFolder();
+        state.skinTextureFolder = entity.getSkinTextureFolder();
+        state.eyeVariantTextureFolder = entity.getEyeVariantFolder();
         state.paletteTextureFolder = entity.getPaletteTextureFolder();
+
+        // NOVOS REGISTROS DAS PARTES DINÂMICAS:
+        state.clothingParts = this.getClothingParts(); 
+        state.partRowMapper = entity::getClothingPartPaletteRow; // Passa a função de mapeamento de linhas
+
+        // REGISTRO DINÂMICO DO CABELO MULTICAMADAS
+        state.hairParts = entity.getHairParts();
+        if (state.hairParts != null) {
+            state.hairPartRows = new int[state.hairParts.length];
+            for (int i = 0; i < state.hairParts.length; i++) {
+                state.hairPartRows[i] = entity.getHairPartPaletteRow(state.hairParts[i]);
+            }
+        }
 
         // MATEMÁTICA OFICIAL VANILLA DE INTERPOLAÇÃO DO OLHAR (BÍPEDE)
         // Calcula a diferença entre para onde o corpo está virado e para onde a cabeça está olhando
@@ -43,33 +69,30 @@ public abstract class RenderBaseDaGem<T extends BaseDasGems, M extends EntityMod
         state.headPitch = net.minecraft.util.Mth.lerp(partialTicks, entity.xRotO, entity.getXRot()); // Ângulo vertical (olhar para cima/baixo)
     }
 
-    @Override
-    public Identifier getTextureLocation(EstadoDoRenderDaGem state) {
+    public Identifier getTextureLocationPalette(EstadoDoRenderDaGem state) {
         return Identifier.fromNamespaceAndPath("galaxite", state.paletteTextureFolder + state.paletteName + ".png");
     }
 
-    protected abstract String[] getClothingParts();
-
-    // --- CAMADA INTERNA DO NOVO SISTEMA DE ROUPAS ---
-    private static class GemClothingLayer<T extends BaseDasGems, M extends EntityModel<EstadoDoRenderDaGem>> extends RenderLayer<EstadoDoRenderDaGem, M> {
-
-        public GemClothingLayer(RenderBaseDaGem<T, M> renderer) {
-            super(renderer);
-        }
-
-        @Override
-        public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, EstadoDoRenderDaGem state, float limbSwing, float limbSwingAmount) {
-            RenderBaseDaGem<T, M> renderer = (RenderBaseDaGem<T, M>) this.getParentRenderer();
-            String[] parts = renderer.getClothingParts();
-
-            if (parts == null || state.isInvisible) return;
-
-            for (String part : parts) {
-                String fullPath = state.clothingTextureFolder + state.clothingName + "/" + state.clothingName + "_" + part + ".png";
-                Identifier texture = Identifier.fromNamespaceAndPath("galaxite", fullPath);
-                
-                renderColoredCutoutModel(this.getParentModel(), texture, poseStack, buffer, packedLight, state, -1);
-            }
-        }
+    public Identifier getTextureLocationClothing(EstadoDoRenderDaGem state) {
+        return Identifier.fromNamespaceAndPath("galaxite", state.clothingTextureFolder + state.clothingName + ".png");
+        
     }
+
+    public Identifier getTextureLocationHairstyles(EstadoDoRenderDaGem state) {
+        return Identifier.fromNamespaceAndPath("galaxite", state.hairstyleTextureFolder + state.hairstyleName + ".png");
+        
+    }
+
+    public Identifier getTextureLocationSkins(EstadoDoRenderDaGem state) {
+        return Identifier.fromNamespaceAndPath("galaxite", state.skinTextureFolder + state.skinName + ".png");
+        
+    }
+
+    public Identifier getTextureLocationEyeVariants(EstadoDoRenderDaGem state) {
+        return Identifier.fromNamespaceAndPath("galaxite", state.eyeVariantTextureFolder + state.eyeVariantName + ".png");
+        
+    }
+
+    protected abstract String[] getClothingParts();
+        
 }

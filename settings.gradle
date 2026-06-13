@@ -1,16 +1,15 @@
 pluginManagement {
     repositories {
+        // Seu repositório offline local
         maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+            url = java.nio.file.Paths.get(rootDir.absolutePath, 'local-repo').toUri().toURL()
+        }
+        // URL oficial corrigida da Fabric
+        maven { 
+            url = 'https://maven.fabricmc.net/' 
         }
         gradlePluginPortal()
     }
 }
-plugins {
-    // ESTA LINHA RESOLVE O ERRO: Permite o download automático do Java correto
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.9.0'
-}
 
-// Should match your modid
 rootProject.name = 'galaxite'

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://apache.org https://apache.org" xmlns="http://apache.org"
+    xmlns:xsi="http://w3.org">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.fabricmc.fabric-loom</groupId>
+  <artifactId>net.fabricmc.fabric-loom.gradle.plugin</artifactId>
+  <version>1.16.0-alpha.13</version>
+  <packaging>pom</packaging>
+  <dependencies>
+    <dependency>
+      <groupId>net.fabricmc</groupId>
+      <artifactId>fabric-loom</artifactId>
+      <version>1.16.0-alpha.13</version>
+    </dependency>
+  </dependencies>
+</project>

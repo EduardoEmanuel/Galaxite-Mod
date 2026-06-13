@@ -1,5 +1,5 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.15.5' // Versão oficial recomendada para Gradle 9+ e Mine 26.1
+    id 'net.fabricmc.fabric-loom' version '1.16.0-alpha.13'
 	id 'maven-publish'
 }
 

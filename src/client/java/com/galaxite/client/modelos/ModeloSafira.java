@@ -2,14 +2,17 @@ package com.galaxite.client.modelos;
 
 import com.galaxite.client.render.EstadoDoRenderDaGem;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SapphireEntityModel extends EntityModel<EstadoDoRenderDaGem> {
+public class ModeloSafira extends EntityModel<EstadoDoRenderDaGem> {
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Identifier.fromNamespaceAndPath("galaxite", "safira"), "main");
 	private final ModelPart body;
 	private final ModelPart right_Leg;
 	private final ModelPart left_Leg;
@@ -22,7 +25,7 @@ public class SapphireEntityModel extends EntityModel<EstadoDoRenderDaGem> {
 	@SuppressWarnings("unused")
 	private final ModelPart root;
 
-	public SapphireEntityModel(ModelPart root) {
+	public ModeloSafira(ModelPart root) {
 		super(root);
 		this.root = root;
 		this.body = root.getChild("body");
