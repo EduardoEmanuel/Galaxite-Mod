@@ -6,4 +6,5 @@ public class ItemPedraGem extends Item implements GemEstouravel {
     public ItemPedraGem(Properties properties) {
         super(properties);
     }
+    
 }

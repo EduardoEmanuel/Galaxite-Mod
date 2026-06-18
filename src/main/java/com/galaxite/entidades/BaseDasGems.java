@@ -205,7 +205,7 @@ public abstract class BaseDasGems extends PathfinderMob {
 
     public Identifier getSkinPartLocation(String partName) {
         String codinome = this.getSkinName();
-        String caminhoCompleto = getSkinTextureFolder() + codinome + "/" + codinome + "_" + partName + ".png";
+        String caminhoCompleto = getSkinTextureFolder() + codinome + "/" + codinome + "_" + partName + "_corpo.png";
         return Identifier.fromNamespaceAndPath("galaxite", caminhoCompleto);
     }
 
@@ -251,4 +251,15 @@ public abstract class BaseDasGems extends PathfinderMob {
             this.discard();
         }
     }
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return false;
+    }
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        return true;
+    }
+    
 }

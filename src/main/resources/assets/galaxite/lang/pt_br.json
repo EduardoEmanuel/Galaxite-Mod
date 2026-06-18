@@ -1,0 +1,15 @@
+{
+  "entity.galaxite.safira": "Safira",
+
+  "item.galaxite.pedra_safira_verde": "Pedra de Safira Verde",
+  "item.galaxite.pedra_safira_azul": "Pedra de Safira Azul",
+  "item.galaxite.pedra_safira_amarela": "Pedra de Safira Amarela",
+  "item.galaxite.pedra_safira_rosa": "Pedra de Safira Rosa",
+  "item.galaxite.pedra_safira_padparadscha": "Pedra de Safira Padparadscha",
+
+  "creativeTab.galaxite": "Galaxite",
+  "itemGroup.galaxite.gems": "Galaxite: Gems",
+  "itemGroup.galaxite.blocks": "Galaxite: Blocos",
+  "itemGroup.galaxite.mobs": "Galaxite: Criaturas",
+  "itemGroup.galaxite.special": "Galaxite: Utilitários Especiais"
+}

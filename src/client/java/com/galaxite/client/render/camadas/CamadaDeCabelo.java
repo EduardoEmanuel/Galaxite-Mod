@@ -69,7 +69,7 @@ public class CamadaDeCabelo<M extends EntityModel<EstadoDoRenderDaGem>> extends 
                     tipoDeRender,          
                     lightCoords,           
                     OverlayTexture.NO_OVERLAY, 
-                    0,                         
+                    0xFFFFFFFF,                           
                     null                       
                 );
             }

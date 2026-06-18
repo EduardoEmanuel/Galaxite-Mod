@@ -20,13 +20,15 @@ public class GerenciadorDePaletas {
             return CACHE_TEXTURAS.get(chaveCache);
         }
 
+        System.out.println("[GALAXITE] Processando textura dinâmica para a chave: " + chaveCache);
+
         Minecraft mc = Minecraft.getInstance();
         try {
             Optional<Resource> recursoBase = mc.getResourceManager().getResource(texturaBase);
             Optional<Resource> recursoPaleta = mc.getResourceManager().getResource(texturaPaleta);
 
             if (recursoBase.isEmpty() || recursoPaleta.isEmpty()) {
-                return texturaBase; // Fallback de segurança
+                return texturaBase; 
             }
 
             try (InputStream streamBase = recursoBase.get().open();
@@ -35,51 +37,77 @@ public class GerenciadorDePaletas {
                 NativeImage imgBase = NativeImage.read(streamBase);
                 NativeImage imgPaleta = NativeImage.read(streamPaleta);
 
-                for (int x = 0; x < imgBase.getWidth(); x++) {
-                    for (int y = 0; y < imgBase.getHeight(); y++) {
-                        // Método público e correto na 1.21.4: getPixel(x, y)
-                        int pixelBase = imgBase.getPixel(x, y);
+                int larguraBase = imgBase.getWidth();
+                int alturaBase = imgBase.getHeight();
 
-                        // Extração do canal Alpha usando Bitwise pura (Formato interno: ABGR)
-                        int alphaBase = (pixelBase >> 24) & 0xFF;
-                        if (alphaBase == 0) continue;
-
-                        // O tom de cinza (Canal Red) dita a coluna X na paleta.
-                        // No formato ABGR do NativeImage, o Red fica nos primeiros 8 bits.
-                        int colunaX = pixelBase & 0xFF;
-
-                        if (colunaX < imgPaleta.getWidth() && linhaPaletaAlvo < imgPaleta.getHeight()) {
-                            int corPaleta = imgPaleta.getPixel(colunaX, linhaPaletaAlvo);
-
-                            // Separa os canais de cores da paleta (também em formato ABGR)
-                            int redPaleta = corPaleta & 0xFF;
-                            int greenPaleta = (corPaleta >> 8) & 0xFF;
-                            int bluePaleta = (corPaleta >> 16) & 0xFF;
-
-                            // Recombina tudo de volta mantendo o Alpha original da gema
-                            int pixelColorido = (alphaBase << 24) | (bluePaleta << 16) | (greenPaleta << 8) | redPaleta;
-
-                            // Método público e correto na 1.21.4: setPixel(x, y, cor)
-                            imgBase.setPixel(x, y, pixelColorido);
+                // 1. MAPEAMENTO INTELIGENTE DA PALETA:
+                // Descobre quantas cores reais (não-transparentes) existem nesta linha da paleta
+                int colunasValidas = 0;
+                if (linhaPaletaAlvo >= 0 && linhaPaletaAlvo < imgPaleta.getHeight()) {
+                    for (int c = 0; c < imgPaleta.getWidth(); c++) {
+                        int corCheck = imgPaleta.getPixel(c, linhaPaletaAlvo);
+                        int alphaCheck = (corCheck >> 24) & 0xFF;
+                        if (alphaCheck > 0) {
+                            colunasValidas = c + 1; // Registra o índice da última cor válida encontrada
                         }
                     }
                 }
 
-                DynamicTexture texturaDinamica = new DynamicTexture(null, imgBase);
+                // Fallback caso a linha inteira seja transparente
+                if (colunasValidas == 0) colunasValidas = imgPaleta.getWidth();
+
+                // 2. PROCESSAMENTO DOS PIXELS DA ENTIDADE
+                for (int x = 0; x < larguraBase; x++) {
+                    for (int y = 0; y < alturaBase; y++) {
+                        int pixelBase = imgBase.getPixel(x, y);
+                        int alphaBase = (pixelBase >> 24) & 0xFF;
+
+                        // Se o pixel da gema for visível, nós colorimos
+                        if (alphaBase > 0) {
+                            int tomDeCinza = pixelBase & 0xFF; // Canal Red serve como nível de brilho (0-255)
+
+                            // Converte a escala de cinza (0-255) proporcionalmente para o número de cores da paleta
+                            int colunaX = (tomDeCinza * (colunasValidas - 1)) / 255;
+
+                            // Garante segurança estrita de limites
+                            if (colunaX < 0) colunaX = 0;
+                            if (colunaX >= imgPaleta.getWidth()) colunaX = imgPaleta.getWidth() - 1;
+
+                            if (linhaPaletaAlvo >= 0 && linhaPaletaAlvo < imgPaleta.getHeight()) {
+                                int corPaleta = imgPaleta.getPixel(colunaX, linhaPaletaAlvo);
+                                int alphaPaleta = (corPaleta >> 24) & 0xFF;
+
+                                // SÓ APLICA A COR SE O PIXEL DA PALETA NÃO FOR TRANSPARENTE
+                                if (alphaPaleta > 0) {
+                                    int redPaleta = corPaleta & 0xFF;
+                                    int greenPaleta = (corPaleta >> 8) & 0xFF;
+                                    int bluePaleta = (corPaleta >> 16) & 0xFF;
+
+                                    // Reconstrói o pixel mantendo o formato ABGR nativo do Minecraft
+                                    int pixelColorido = (alphaBase << 24) | (bluePaleta << 16) | (greenPaleta << 8) | redPaleta;
+                                    imgBase.setPixel(x, y, pixelColorido);
+                                }
+                                // Se a paleta for transparente aqui, o pixel mantém o tom original (não fica branco!)
+                            }
+                        }
+                    }
+                }
+
+                DynamicTexture texturaDinamica = new DynamicTexture(() -> "dinamico_" + chaveCache.toLowerCase(), imgBase);
+                texturaDinamica.upload();
+                imgPaleta.close();
+
                 Identifier idDinamico = Identifier.fromNamespaceAndPath("galaxite", "dinamico/" + chaveCache.toLowerCase());
-                
                 mc.getTextureManager().register(idDinamico, texturaDinamica);
+                
                 CACHE_TEXTURAS.put(chaveCache, idDinamico);
                 return idDinamico;
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[GALAXITE ERRO] Falha crítica ao colorir os pixels do modelo:");
+            e.printStackTrace(); 
             return texturaBase;
         }
-    }
-
-    public static void limparCache() {
-        CACHE_TEXTURAS.clear();
     }
 }

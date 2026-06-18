@@ -1,0 +1,15 @@
+{
+  "entity.galaxite.safira": "Sapphire",
+
+  "item.galaxite.pedra_safira_verde": "Green Sapphire Gem",
+  "item.galaxite.pedra_safira_azul": "Blue Sapphire Gem",
+  "item.galaxite.pedra_safira_amarela": "Yellow Sapphire Gem",
+  "item.galaxite.pedra_safira_rosa": "Pink Sapphire Gemstone",
+  "item.galaxite.pedra_safira_padparadscha": "Padparadscha Sapphire Gemstone",
+
+  "creativeTab.galaxite": "Galaxite",
+  "itemGroup.galaxite.gems": "Galaxite: Gems",
+  "itemGroup.galaxite.blocks": "Galaxite: Blocks",
+  "itemGroup.galaxite.mobs": "Galaxite: Creatures",
+  "itemGroup.galaxite.special": "Galaxite: Special Utilities"
+}

@@ -1,10 +1,9 @@
 package com.galaxite.client.modelos;
 
-import com.galaxite.client.render.EstadoDoRenderDaGem;
-import com.galaxite.entidades.Safira;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.galaxite.client.render.EstadoDoRenderDaGem;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -17,9 +16,10 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.Identifier;
 
-public class ModeloSafira_copy<T extends Safira> extends EntityModel<EstadoDoRenderDaGem> {
-	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
+public class ModeloSafiraCopy extends EntityModel<EstadoDoRenderDaGem> {
+	
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Identifier.fromNamespaceAndPath("galaxite", "safira"), "main");
+
 	private final ModelPart body;
 	private final ModelPart gem_body;
 	private final ModelPart right_Leg;
@@ -40,8 +40,14 @@ public class ModeloSafira_copy<T extends Safira> extends EntityModel<EstadoDoRen
 	private final ModelPart composedHair;
 	private final ModelPart gem_head;
 
-	public ModeloSafira_copy(ModelPart root) {
+	
+	private final Map<String, ModelPart> gemParts = new HashMap<>();
+	@SuppressWarnings("unused")
+	private final ModelPart root;
+	
+	public ModeloSafiraCopy(ModelPart root) {
 		super(root); 
+		this.root = root;
 		this.body = root.getChild("body");
 		this.gem_body = this.body.getChild("gem_body");
 		this.right_Leg = this.body.getChild("right_Leg");
@@ -61,9 +67,10 @@ public class ModeloSafira_copy<T extends Safira> extends EntityModel<EstadoDoRen
 		this.head = root.getChild("head");
 		this.composedHair = this.head.getChild("composedHair");
 		this.gem_head = this.head.getChild("gem_head");
+		
 	}
 
-	public static LayerDefinition createBodyLayer() {
+	public static LayerDefinition getTexturedModelData() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
@@ -183,13 +190,41 @@ public class ModeloSafira_copy<T extends Safira> extends EntityModel<EstadoDoRen
 		return LayerDefinition.create(meshdefinition, 128, 78);
 	}
 
- @Override
-    public void setAngles(EstadoDoRenderDaGem state) {
-	}
+	@Override
+	public void setupAnim(EstadoDoRenderDaGem state) {
+		super.setupAnim(state);
+		
+		// 1. RECUPERAÇÃO DOS DADOS DO MOTOR GRÁFICO MODERNIZADO
+		float limbSwing = state.walkAnimationPos;       
+		float limbSwingAmount = state.walkAnimationSpeed; 
+		float ageInTicks = state.ageInTicks;             
 
-	 public void renderToBuffer(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, int color) {
-    	body.render(matrices, vertexConsumer, light, overlay, color);
-		head.render(matrices, vertexConsumer, light, overlay, color);
-   }
+		// Multiplicador para converter Graus para Radianos (exigidos pelas dobras do modelo)
+		float rad = 0.017453292F; 
+
+		// 2. SISTEMA SEGURO DE RASTREAMENTO DO OLHAR (HEAD TRACKING)
+		this.head.yRot = state.netHeadYaw * rad; // Aplica rotação lateral controlada
+		this.head.xRot = state.headPitch * rad; // Aplica inclinação vertical controlada
+
+		// 3. ANIMAÇÃO DE CAMINHADA BÍPEDE CRUSADA (ESTILO PLAYER)
+		this.right_Leg.xRot = net.minecraft.util.Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.left_Leg.xRot = net.minecraft.util.Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+
+		this.right_Arm.xRot = net.minecraft.util.Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+		this.left_Arm.xRot = net.minecraft.util.Mth.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+
+		this.right_Arm.zRot = 0.0F;
+		this.left_Arm.zRot = 0.0F;
+
+		// 4. ANIMAÇÃO DE RESPIRAÇÃO / PARADA (IDLE ANIMATION)
+		this.right_Arm.zRot += net.minecraft.util.Mth.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+		this.left_Arm.zRot -= net.minecraft.util.Mth.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+		this.right_Arm.xRot += net.minecraft.util.Mth.sin(ageInTicks * 0.067F) * 0.05F;
+		this.left_Arm.xRot -= net.minecraft.util.Mth.sin(ageInTicks * 0.067F) * 0.05F;
+
+		// Balanço suave de "realeza" característico do cabelo longo e do corpo da Safira
+		this.composedHair.zRot = net.minecraft.util.Mth.cos(ageInTicks * 0.03F) * 0.03F;
+		this.body.zRot = net.minecraft.util.Mth.cos(ageInTicks * 0.03F) * 0.01F;
+	}
 
 }

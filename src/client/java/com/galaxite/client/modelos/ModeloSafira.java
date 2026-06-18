@@ -18,6 +18,9 @@ public class ModeloSafira extends EntityModel<EstadoDoRenderDaGem> {
 	private final ModelPart left_Leg;
 	private final ModelPart right_Arm;
 	private final ModelPart left_Arm;
+	private final ModelPart rebel_arms;
+	private final ModelPart rebel_right_Arm;
+	private final ModelPart rebel_left_Arm;
 	private final ModelPart head;
 	private final ModelPart composedHair;
 
@@ -33,6 +36,9 @@ public class ModeloSafira extends EntityModel<EstadoDoRenderDaGem> {
 		this.left_Leg = this.body.getChild("left_Leg");
 		this.right_Arm = this.body.getChild("right_Arm");
 		this.left_Arm = this.body.getChild("left_Arm");
+		this.rebel_arms = this.body.getChild("rebel_arms");
+		this.rebel_right_Arm = this.rebel_arms.getChild("rebel_right_Arm");
+		this.rebel_left_Arm = this.rebel_arms.getChild("rebel_left_Arm");
 		this.head = root.getChild("head");
 		this.composedHair = this.head.getChild("composedHair");
 
@@ -83,6 +89,16 @@ public class ModeloSafira extends EntityModel<EstadoDoRenderDaGem> {
 		left_Arm.addOrReplaceChild("gem_Left_Arm", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, 1.211F, -1.0417F, 2.0F, 2.0F, 2.0F, new CubeDeformation(-0.3F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 		left_Arm.addOrReplaceChild("gem_Left_Hand", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 3.3103F, -1.065F, 2.0F, 2.0F, 2.0F, new CubeDeformation(-0.3F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
+		PartDefinition rebel_arms = body.addOrReplaceChild("rebel_arms", CubeListBuilder.create(), PartPose.offsetAndRotation(-4.0F, 0.7667F, 0.0F, 1.0036F, 0.0F, 0.0F));
+
+		PartDefinition rebel_right_Arm = rebel_arms.addOrReplaceChild("rebel_right_Arm", CubeListBuilder.create().texOffs(52, 20).addBox(-1.0F, -6.7667F, -1.0F, 2.0F, 8.0F, 2.0F, new CubeDeformation(0.0F))
+		.texOffs(52, 16).addBox(-1.0F, -0.6667F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.65F))
+		.texOffs(64, 30).addBox(-1.0333F, -7.0F, -1.0F, 2.0F, 8.0F, 2.0F, new CubeDeformation(0.3F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -1.0079F, 0.0F, 0.0F));
+
+		PartDefinition rebel_left_Arm = rebel_arms.addOrReplaceChild("rebel_left_Arm", CubeListBuilder.create().texOffs(44, 20).addBox(-1.0F, -6.7667F, -1.0F, 2.0F, 8.0F, 2.0F, new CubeDeformation(0.0F))
+		.texOffs(44, 16).addBox(-1.0F, -0.6667F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.65F))
+		.texOffs(56, 30).addBox(-1.0333F, -7.0F, -1.0F, 2.0F, 8.0F, 2.0F, new CubeDeformation(0.3F)), PartPose.offsetAndRotation(8.0F, 0.0F, 0.0F, -1.0079F, 0.0F, 0.0F));
+
 		PartDefinition head = partDefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -6.8F, -5.5F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 8.8F, 1.5F));
 		head.addOrReplaceChild("visor", CubeListBuilder.create().texOffs(46, 34).addBox(-4.0F, -6.8F, -5.506F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.001F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 		head.addOrReplaceChild("gem_Left_Eye", CubeListBuilder.create().texOffs(0, 0).addBox(-0.975F, -4.7806F, -5.6917F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.025F)), PartPose.offset(0.0F, 0.0F, 0.0F));
@@ -94,12 +110,22 @@ public class ModeloSafira extends EntityModel<EstadoDoRenderDaGem> {
 		head.addOrReplaceChild("gem_Left_Cheek", CubeListBuilder.create().texOffs(0, 0).addBox(1.525F, -1.7806F, -6.0417F, 2.0F, 2.0F, 2.0F, new CubeDeformation(-0.3F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 		head.addOrReplaceChild("gem_Right_Cheek", CubeListBuilder.create().texOffs(0, 0).addBox(-3.475F, -1.7806F, -6.0417F, 2.0F, 2.0F, 2.0F, new CubeDeformation(-0.3F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		PartDefinition composedHair = head.addOrReplaceChild("composedHair", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0333F, -3.0964F, -5.8486F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.3F))
-				.texOffs(71, 49).addBox(-10.0333F, -9.0964F, -1.4986F, 20.0F, 14.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0333F, -3.6036F, 0.3486F));
-		composedHair.addOrReplaceChild("hair_top_piece_2_r1", CubeListBuilder.create().texOffs(60, 4).addBox(-2.5F, -1.5F, 0.0F, 5.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.1273F, -3.9464F, -1.538F, 0.0F, 2.3562F, 0.0F));
-		composedHair.addOrReplaceChild("hair_top_piece_1_r1", CubeListBuilder.create().texOffs(60, 0).addBox(-2.5F, -1.5F, 0.0F, 5.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.006F, -3.9464F, -1.538F, 0.0F, 0.7854F, 0.0F));
-		composedHair.addOrReplaceChild("hair_long_lengh_r1", CubeListBuilder.create().texOffs(74, 18).addBox(-7.0F, -3.5F, -5.0F, 14.0F, 7.0F, 10.0F, new CubeDeformation(0.35F)), PartPose.offsetAndRotation(-0.0333F, 6.1818F, 4.0718F, -1.2697F, 0.0F, 0.0F));
-		composedHair.addOrReplaceChild("hair_long_base_r1", CubeListBuilder.create().texOffs(64, 1).addBox(-5.0F, -5.0F, -4.5F, 10.0F, 8.0F, 9.0F, new CubeDeformation(0.35F)), PartPose.offsetAndRotation(-0.0333F, 0.0036F, 2.9514F, 1.5708F, 0.0F, 0.0F));
+		PartDefinition composedHair = head.addOrReplaceChild("composedHair", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0333F, -4.9036F, -5.8486F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.35F))
+		.texOffs(76, 34).addBox(-10.0333F, -4.9036F, -1.4986F, 20.0F, 14.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0333F, 3.6036F, 0.3486F));
+
+		PartDefinition hair_long_base_detail_r1 = composedHair.addOrReplaceChild("hair_long_base_detail_r1", CubeListBuilder.create().texOffs(72, 48).addBox(-12.0F, -9.0F, 0.0F, 24.0F, 24.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0333F, -4.9036F, 3.5014F, 0.2618F, 0.0F, 0.0F));
+
+		PartDefinition hair_long_base_top_piece_3_r1 = composedHair.addOrReplaceChild("hair_long_base_top_piece_3_r1", CubeListBuilder.create().texOffs(96, 4).addBox(-2.5F, -1.5F, 0.0F, 5.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0273F, 5.9464F, 2.012F, 0.0F, 2.3562F, 0.0F));
+
+		PartDefinition hair_long_base_top_piece_2_r1 = composedHair.addOrReplaceChild("hair_long_base_top_piece_2_r1", CubeListBuilder.create().texOffs(96, 0).addBox(-2.5F, -1.5F, 0.0F, 5.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.094F, 5.9464F, 2.012F, 0.0F, 0.7854F, 0.0F));
+
+		PartDefinition hair_top_piece_2_r1 = composedHair.addOrReplaceChild("hair_top_piece_2_r1", CubeListBuilder.create().texOffs(60, 4).addBox(-2.5F, -1.5F, 0.0F, 5.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.1273F, 3.9464F, -1.538F, 0.0F, 2.3562F, 0.0F));
+
+		PartDefinition hair_top_piece_1_r1 = composedHair.addOrReplaceChild("hair_top_piece_1_r1", CubeListBuilder.create().texOffs(60, 0).addBox(-2.5F, -1.5F, 0.0F, 5.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.006F, 3.9464F, -1.538F, 0.0F, 0.7854F, 0.0F));
+
+		PartDefinition hair_long_lengh_r1 = composedHair.addOrReplaceChild("hair_long_lengh_r1", CubeListBuilder.create().texOffs(74, 17).addBox(-7.0F, -3.5F, -5.0F, 14.0F, 7.0F, 10.0F, new CubeDeformation(0.35F)), PartPose.offsetAndRotation(-0.0333F, -6.1818F, 4.0718F, -1.2697F, 0.0F, 0.0F));
+
+		PartDefinition hair_long_base_r1 = composedHair.addOrReplaceChild("hair_long_base_r1", CubeListBuilder.create().texOffs(64, 0).addBox(-5.0F, -3.0F, -4.5F, 10.0F, 8.0F, 9.0F, new CubeDeformation(0.35F)), PartPose.offsetAndRotation(-0.0333F, -0.0036F, 2.9514F, 1.5708F, 0.0F, 0.0F));
 
 		return LayerDefinition.create(meshDefinition, 128, 78);
 	}

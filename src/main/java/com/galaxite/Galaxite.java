@@ -5,6 +5,10 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.galaxite.entidades.ModEntities;
+import com.galaxite.itens.ModCreativeTabs;
+import com.galaxite.itens.ModItems;
+
 public class Galaxite implements ModInitializer {
 	public static final String MOD_ID = "galaxite";
 
@@ -15,9 +19,11 @@ public class Galaxite implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+	// 1. Registra os seus itens estáticos primeiro
+        ModItems.inicializar();
+        // 2. Registra as suas entidades e seus respectivos atributos de vida/armadura
+        ModEntities.inicializar();
+		ModCreativeTabs.registrarTabs();
 
 		LOGGER.info("Hello Fabric world!");
 	}

@@ -16,10 +16,12 @@ public class Safira extends BaseDasGems {
     
     // DEFINIÇÃO EXCLUSIVA: O número de variantes e itens pertencem apenas à Safira!
     public enum SapphireVariant {
-        AZUL("azul", ModItems.PEDRA_SAFIRA_AZUL),
-        ROSA("rosa", ModItems.PEDRA_SAFIRA_ROSA),
-        AMARELA("amarela", ModItems.PEDRA_SAFIRA_AMARELA),
-        VERDE("verde", ModItems.PEDRA_SAFIRA_VERDE);
+        AZUL("safira_azul", ModItems.PEDRA_SAFIRA_AZUL),
+        ROSA("safira_rosa", ModItems.PEDRA_SAFIRA_ROSA),
+        AMARELA("safira_amarela", ModItems.PEDRA_SAFIRA_AMARELA),
+        VERDE("safira_verde", ModItems.PEDRA_SAFIRA_VERDE),
+        PADPARADSCHA("safira_padparadscha", ModItems.PEDRA_SAFIRA_PADPARADSCHA);
+
 
         private final String id;
         private final Item gemItem;
@@ -41,10 +43,7 @@ public class Safira extends BaseDasGems {
     }
 
     public enum SapphireClothing {
-        DEFAULT("default"),
-        NOBLE("nobre"),
-        GUARD("guarda"),
-        HOMEWORLD("homeworld");
+        DEFAULT("default");
 
         private final String codename;
         SapphireClothing(String codename) { this.codename = codename; }
@@ -52,10 +51,7 @@ public class Safira extends BaseDasGems {
     }
 
     public enum SapphireHairstyle {
-        DEFAULT("default"),
-        NOBLE("nobre"),
-        GUARD("guarda"),
-        HOMEWORLD("homeworld");
+        DEFAULT("default");
 
         private final String codename;
         SapphireHairstyle(String codename) { this.codename = codename; }
@@ -63,10 +59,7 @@ public class Safira extends BaseDasGems {
     }
 
     public enum SapphireSkinVariants {
-        DEFAULT("default"),
-        NOBLE("nobre"),
-        GUARD("guarda"),
-        HOMEWORLD("homeworld");
+        DEFAULT("default");
 
         private final String codename;
         SapphireSkinVariants(String codename) { this.codename = codename; }
@@ -74,10 +67,7 @@ public class Safira extends BaseDasGems {
     }
 
     public enum SapphireEyeVariants {
-        DEFAULT("default"),
-        NOBLE("nobre"),
-        GUARD("guarda"),
-        HOMEWORLD("homeworld");
+        DEFAULT("default");
 
         private final String codename;
         SapphireEyeVariants(String codename) { this.codename = codename; }
@@ -95,13 +85,26 @@ public class Safira extends BaseDasGems {
                 .add(Attributes.ARMOR, 2.0);            // Pequena resistência natural
     }
 
+    /* // --- NOVO: MAPEAMENTO DINÂMICO DE LINHAS DA PALETA (LINHA DE SUPORTE PARA MAIS DE UMA INFORMAÇÃO NA GEM) ---
+    @Override
+    public int getClothingPartPaletteRow(String partName) {
+        return switch (partName.toLowerCase()) {
+            case "top", "vestido", "peitoral" -> 5; // Linha 5 da paleta (CLOTHING_COLOR)
+            case "sapato", "botas", "meias"      -> 6; // Nova linha 6 focada em calçados
+            case "capa", "luvas", "detalhes"    -> 7; // Nova linha 7 focada em acessórios/adornos
+            case "insignia"  -> 8; // Nova linha 8 focada na insignia
+            default -> 5;                             // Fallback caso venha uma parte genérica
+        };
+    } */
+
     // --- NOVO: MAPEAMENTO DINÂMICO DE LINHAS DA PALETA ---
     @Override
     public int getClothingPartPaletteRow(String partName) {
         return switch (partName.toLowerCase()) {
-            case "corpo", "vestido", "peitoral" -> 5; // Linha 5 da paleta (CLOTHING_COLOR)
-            case "sapato", "botas", "meias"      -> 6; // Nova linha 6 focada em calçados
-            case "capa", "luvas", "detalhes"    -> 7; // Nova linha 7 focada em acessórios/adornos
+            case "top" -> 5; // Linha 5 da paleta (CLOTHING_COLOR)
+            case "sapatos" -> 6; // Nova linha 6 focada em calçados
+            case "luvas", "detalhes" -> 7; // Nova linha 7 focada em acessórios/adornos
+            case "insignia"  -> 8; // Nova linha 8 focada na insignia
             default -> 5;                             // Fallback caso venha uma parte genérica
         };
     }
@@ -171,4 +174,5 @@ public class Safira extends BaseDasGems {
     public String getEyeVariantFolder() {
         return "textures/entidades/safira/olhos/";
     }
+
 }

@@ -56,7 +56,7 @@ public class CamadaDeOlho<M extends EntityModel<EstadoDoRenderDaGem>> extends Re
             submitNodeCollector.submitModel(
                 this.getParentModel(), state, poseStack, 
                 RenderTypes.entityCutout(texturaEscleraColorida), 
-                lightCoords, OverlayTexture.NO_OVERLAY, 0, null
+                lightCoords, OverlayTexture.NO_OVERLAY,  0xFFFFFFFF, null
             );
 
         }

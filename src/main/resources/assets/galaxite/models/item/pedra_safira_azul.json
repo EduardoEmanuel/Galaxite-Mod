@@ -1,6 +1,6 @@
 {
-  "model": {
-    "type": "minecraft:model",
-    "model": "galaxite:item/pedra_safira_azul"
+    "parent": "minecraft:item/generated",
+    "textures": {
+      "layer0": "galaxite:item/pedra_safira_azul"
+    }
   }
-}

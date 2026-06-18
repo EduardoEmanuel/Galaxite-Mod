@@ -17,6 +17,7 @@ public class EstadoDoRenderDaGem extends LivingEntityRenderState {
     public String eyeVariantTextureFolder;
     public String skinTextureFolder;
     public String paletteTextureFolder;
+    public String gemTextureFolder;
 
     public String[] clothingParts;
     public java.util.function.Function<String, Integer> partRowMapper;
@@ -27,6 +28,7 @@ public class EstadoDoRenderDaGem extends LivingEntityRenderState {
     // VARIÁVEIS PRÓPRIAS: Garantem compatibilidade universal de rotação
     public float netHeadYaw;
     public float headPitch;
+
 
 
 
